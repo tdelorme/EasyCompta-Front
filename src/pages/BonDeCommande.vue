@@ -44,19 +44,54 @@
         </card>
       </div>
     </div>
+    <br/>
     <div class="row">
-
-
-      <ul>
-        
-        <li v-for="product in productsBdc" :key="product.id">
-            {{product.id}} - {{product.marque}} - {{product.nom}} - Quantité : {{product.quantite}} - <i class="tim-icons icon-trash-simple" v-on:click="deleteItem(product.id)"></i>
-        </li>
-        
-      </ul>
-    
-
-      <p>Ici le formulaire recap de la commande avec la possibilité de supprimer des lignes si on fait une erreur</p>
+      <div class="col-12">
+        <card>
+          <ul>
+            <li v-for="product in productsBdc" :key="product.id">
+              {{product.id}} - {{product.marque}} - {{product.nom}} - Quantité : {{product.quantite}} - <i class="tim-icons icon-trash-simple" v-on:click="deleteItem(product.id)"></i>
+            </li>
+          </ul>
+          <form name="formBDC" @submit.prevent="handleBonDeCommande" class="form-inline">
+              <div class="col">
+                <input type="text" class="form-control" name="numDistributeur" v-model="purchaseOrder.numDistributeur" placeholder="Num.Distributeur"/>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" name="nomClient" v-model="purchaseOrder.nomClient" placeholder="Nom du client"/>
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" name="prenomClient" v-model="purchaseOrder.prenomClient" placeholder="Prénom du client"/>
+              </div>
+              <div class="col">
+                <input type="text" name="adresseClient" class="form-control" v-model="purchaseOrder.adressesClient" placeholder="Adresse du client"/>
+              </div>
+              <div class="col">
+                <input type="text" name="telephoneClient" class="form-control" v-model="purchaseOrder.telephoneClient" placeholder="Téléphone du client"/>
+              </div>
+              <div class="col">
+                <input type="email" name="emailClient" class="form-control" v-model="purchaseOrder.emailClient" placeholder="Email du client"/>
+              </div>
+              <div class="col">
+                <input type="text" name="facebook" class="form-control" v-model="purchaseOrder.facebookClient" placeholder="Facebook du client"/>
+              </div>
+              <div class="col">
+              <select name="typePaiement" v-model="purchaseOrder.typePaiement" class="form-select-search">
+                <option value="" class="option">Sélectionner un type de paiement</option>
+                <option value="CHEQUE" class="option">Chèque</option>
+                <option value="ESPECE" class="option">Espèce</option>
+                <option value="VIREMENT" class="option">Virement</option>
+                <option value="CB" class="option">Carte Bleu</option>
+              </select>
+              </div>
+              <div class="col">
+                <button class="btn btn-primary btn-block">
+                  <span>Envoyer</span>
+                </button>
+              </div>
+          </form>
+        </card>
+      </div>
     </div>
     </div>
 </template>
@@ -64,7 +99,8 @@
 import { BaseTable } from "@/components";
 import Card from '../components/Cards/Card.vue';
 import Product from '../model/product.model';
-import SearchCriteria from '../model/search.criteria.model'
+import SearchCriteria from '../model/search.criteria.model';
+import PurchaseOrder from '../model/purchaseOrder.model';
 const tableColumns = ["Id","Nom","Marque","Type","Reference", "Description", "PrixHT", "PrixTTC"];
 let tableData = []
 export default {
@@ -81,6 +117,7 @@ export default {
       },
       product: new Product('','','','','','',''),
       search: new SearchCriteria('','',''),
+      purchaseOrder: new PurchaseOrder('', '', '', '', '', '', '', '', []),
       productsBdc: []
     };
   },
@@ -113,6 +150,31 @@ export default {
         this.table1.data = [];
         console.error(error.response.data.message)
       })
+    },
+    handleBonDeCommande() {
+      const baseURI = 'purchase/order/send';
+
+      this.$http.put(baseURI, {
+        numeroDistributeur:this.purchaseOrder.numDistributeur,
+        nomClient:this.purchaseOrder.nomClient,
+        prenomClient:this.purchaseOrder.prenomClient,
+        adresseClient:this.purchaseOrder.adressesClient,
+        telephoneClient:this.purchaseOrder.telephoneClient,
+        emailClient:this.purchaseOrder.emailClient,
+        facebookClient:this.purchaseOrder.facebookClient,
+        produits:this.productsBdc,
+        typePaiement:this.purchaseOrder.typePaiement
+      });
+      
+      this.purchaseOrder.numDistributeur = '';
+      this.purchaseOrder.nomClient = '';
+      this.purchaseOrder.prenomClient = '';
+      this.purchaseOrder.adressesClient ='';
+      this.purchaseOrder.telephoneClient = '';
+      this.purchaseOrder.emailClient = '';
+      this.purchaseOrder.facebookClient = '';
+      this.productsBdc = [];
+      this.purchaseOrder.typePaiement = '';
     },
     addItem(item) {
 
