@@ -152,13 +152,14 @@
           activeIndex: 0,
           chartData: {
             datasets: [{ }],
-            labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+            labels: ['JANV', 'FEVR', 'MARS', 'AVRI', 'MAI', 'JUIN', 'JUIL', 'AOUT', 'SEPT', 'OCTO', 'NOVE', 'DECE'],
           },
           extraOptions: chartConfigs.purpleChartOptions,
           gradientColors: config.colors.primaryGradient,
           gradientStops: [1, 0.4, 0],
           categories: []
         },
+        dataBigChart:{},
         purpleLineChart: {
           extraOptions: chartConfigs.purpleChartOptions,
           chartData: {
@@ -239,6 +240,7 @@
     },
     methods: {
       initBigChart(index) {
+
         let chartData = {
           datasets: [{
             fill: true,
@@ -253,13 +255,46 @@
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 4,
-            data: this.bigLineChart.allData[index]
+            data: Object.values(this.dataBigChart)
           }],
-          labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+          labels: ['JANV', 'FEVR', 'MARS', 'AVRI', 'MAI', 'JUIN', 'JUIL', 'AOUT', 'SEPT', 'OCTO', 'NOVE', 'DECE'],
         }
         this.$refs.bigChart.updateGradients(chartData);
         this.bigLineChart.chartData = chartData;
         this.bigLineChart.activeIndex = index;
+      },
+      getData() {
+        const baseURI = "stats/current/year";
+
+        this.$http.get(baseURI).then(response => {
+          let janv = response.data.JANV;
+          let fevr = response.data.FEVR;
+          let mars = response.data.MARS;
+          let avri = response.data.AVRI;
+          let mai = response.data.MAI;
+          let juin = response.data.JUIN;
+          let juil = response.data.JUIL;
+          let aout = response.data.AOUT;
+          let sept = response.data.SEPT;
+          let octo = response.data.OCTO;
+          let nove = response.data.NOVE;
+          let dece = response.data.DECE;
+          this.dataBigChart = {
+            janv,
+            fevr,
+            mars,
+            avri,
+            mai,
+            juin,
+            juil,
+            aout,
+            sept,
+            octo,
+            nove,
+            dece
+          };
+          this.initBigChart(0);
+        });
       }
     },
     mounted() {
@@ -268,7 +303,7 @@
         this.i18n.locale = 'ar';
         this.$rtl.enableRTL();
       }
-      this.initBigChart(0);
+      this.getData()
     },
     beforeDestroy() {
       if (this.$rtl.isRTL) {
