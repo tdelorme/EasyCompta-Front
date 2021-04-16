@@ -15,8 +15,9 @@
             v-if="hasValue(item, column)">
           {{itemValue(item, column)}}
         </td>
-        <td v-on:click="updateItem(item)"><i class="tim-icons icon-pencil"></i></td>
-        <td v-on:click="deleteItem(item['id'])"><i class="tim-icons icon-trash-simple"></i></td>
+        <td v-if="canUpdate()" v-on:click="updateItem(item)"><i class="tim-icons icon-pencil"></i></td>
+        <td v-if="canDelete()" v-on:click="deleteItem(item['id'])"><i class="tim-icons icon-trash-simple"></i></td>
+        <td v-if="canAdd()" v-on:click="addItem(item)"><i class="tim-icons icon-simple-add"></i></td>
       </slot>
     </tr>
     </tbody>
@@ -50,6 +51,21 @@
         type: String,
         default: '',
         description: "<tbody> css classes"
+      },
+      delete: {
+        type: Boolean,
+        default: false,
+        description: "can delete item"
+      },
+      update: {
+        type: Boolean,
+        default: false,
+        description: "can update item"
+      },
+      add: {
+        type: Boolean,
+        default: false,
+        description: "can add item"
       }
     },
     computed: {
@@ -72,9 +88,22 @@
         }
         else {}
       },
+      addItem(item) {
+        this.$parent.$options.parent.addItem(item);
+      },
       updateItem(item) {
         this.$parent.$options.parent.updateItem(item);
+      },
+      canDelete() {
+        return this.delete;
+      },
+      canUpdate() {
+        return this.update;
+      },
+      canAdd() {
+        return this.add;
       }
+
     }
   };
 </script>

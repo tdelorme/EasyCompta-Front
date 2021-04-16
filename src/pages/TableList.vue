@@ -37,7 +37,9 @@
           <div class="table-responsive">
             <base-table :data="table1.data"
                         :columns="table1.columns"
-                        thead-classes="text-primary">
+                        thead-classes="text-primary"
+                        :delete="true"
+                        :update="true">
             </base-table>
           </div>
         </card>

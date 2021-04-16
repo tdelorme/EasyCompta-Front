@@ -8,7 +8,7 @@ const Profile = () => import(/* webpackChunkName: "common" */ "@/pages/Profile.v
 const Notifications = () => import(/* webpackChunkName: "common" */"@/pages/Notifications.vue");
 const Icons = () => import(/* webpackChunkName: "common" */ "@/pages/Icons.vue");
 const Maps = () => import(/* webpackChunkName: "common" */ "@/pages/Maps.vue");
-const Typography = () => import(/* webpackChunkName: "common" */ "@/pages/Typography.vue");
+const BonDeCommande = () => import(/* webpackChunkName: "common" */ "@/pages/BonDeCommande.vue");
 const TableList = () => import(/* webpackChunkName: "common" */ "@/pages/TableList.vue");
 
 const routes = [
@@ -43,9 +43,9 @@ const routes = [
         component: Maps
       },
       {
-        path: "typography",
-        name: "typography",
-        component: Typography
+        path: "bon-de-commande",
+        name: "bondecommande",
+        component: BonDeCommande
       },
       {
         path: "table-list",
